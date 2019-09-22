@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_drag_drop/bloc/cartListBloc.dart';
+import 'package:flutter_drag_drop/bloc/provider.dart';
 import 'package:flutter_drag_drop/model/footItem.dart';
 
 void main() => runApp(MyApp());
@@ -43,13 +44,26 @@ class Home extends StatelessWidget {
 
 class ItemContainer extends StatelessWidget {
   final FoodItem foodItem;
+  final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
 
   ItemContainer({@required this.foodItem});
+
+  addToCard(FoodItem foodItem) {
+    bloc.addToList(foodItem);
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        addToCard(foodItem);
+        final snackBar = SnackBar(
+          content: Text('${foodItem.title} added to the cart'),
+          duration: Duration(microseconds: 4000),
+        );
+
+        Scaffold.of(context).showSnackBar(snackBar);
+      },
       child: Items(
           hotel: foodItem.hotel,
           itemName: foodItem.title,
@@ -275,26 +289,39 @@ Widget title() {
 }
 
 class CustomAppBar extends StatelessWidget {
+  final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
   @override
   Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Icon(Icons.menu),
+          StreamBuilder(
+            stream: bloc.listStream,
+            builder: (context, snapshot) {
+              List<FoodItem> foodItems = snapshot.data;
+              int length = foodItems != null ? foodItems.length : 0;
+              return buildGestureDetector(length, context, foodItems);
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  GestureDetector buildGestureDetector(
+      int length, BuildContext context, List<FoodItem> foodItems) {
     return GestureDetector(
       onTap: () {},
       child: Container(
-        margin: EdgeInsets.only(bottom: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Icon(Icons.menu),
-            Container(
-              margin: EdgeInsets.only(right: 30),
-              child: Text('0'),
-              padding: EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                  color: Colors.yellow[800],
-                  borderRadius: BorderRadius.circular(50.0)),
-            )
-          ],
-        ),
+        margin: EdgeInsets.only(right: 30.0),
+        child: Text(length.toString()),
+        padding: EdgeInsets.all(15.0),
+        decoration: BoxDecoration(
+            color: Colors.yellow[800],
+            borderRadius: BorderRadius.circular(50.0)),
       ),
     );
   }

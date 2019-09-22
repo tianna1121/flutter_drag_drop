@@ -17,7 +17,7 @@ class CartListBloc extends BlocBase {
   Sink<List<FoodItem>> get listSink => _listController.sink;
 
   // * business logic
-  addList(FoodItem foodItem) {
+  addToList(FoodItem foodItem) {
     listSink.add(provider.addToList(foodItem));
   }
 
