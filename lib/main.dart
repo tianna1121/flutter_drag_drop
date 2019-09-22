@@ -109,7 +109,49 @@ class Items extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(
                     left: leftAligned ? 20 : 0, right: leftAligned ? 0 : 20),
-              )
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            itemName,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 18.0),
+                          ),
+                        ),
+                        Text(
+                          '\$$itemPrice',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w200, fontSize: 18.0),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 15.0,
+                          ),
+                          children: [
+                            TextSpan(text: "by "),
+                            TextSpan(
+                                text: hotel,
+                                style: TextStyle(fontWeight: FontWeight.w700))
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: containerPadding),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
