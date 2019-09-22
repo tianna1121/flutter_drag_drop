@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_drag_drop/bloc/cartListBloc.dart';
+import 'package:flutter_drag_drop/model/footItem.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,10 +26,94 @@ class Home extends StatelessWidget {
       body: SafeArea(
         child: Container(
           child: ListView(
-            children: <Widget>[FirstHalf()],
+            children: <Widget>[
+              FirstHalf(),
+              SizedBox(
+                height: 45.0,
+              ),
+              for (var foodItem in fooditemList.foodItems)
+                ItemContainer(foodItem: foodItem)
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class ItemContainer extends StatelessWidget {
+  final FoodItem foodItem;
+
+  ItemContainer({@required this.foodItem});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Items(
+          hotel: foodItem.hotel,
+          itemName: foodItem.title,
+          itemPrice: foodItem.price,
+          imgUrl: foodItem.imgUrl,
+          leftAligned: (foodItem.id % 2 == 0) ? true : false),
+    );
+  }
+}
+
+class Items extends StatelessWidget {
+  final bool leftAligned;
+  final String imgUrl;
+  final double itemPrice;
+  final String itemName;
+  final String hotel;
+
+  Items(
+      {@required this.leftAligned,
+      @required this.imgUrl,
+      @required this.itemName,
+      @required this.itemPrice,
+      @required this.hotel});
+  @override
+  Widget build(BuildContext context) {
+    double containerPadding = 45.0;
+    double containerBorderRadius = 10.0;
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(
+              left: leftAligned ? 0 : containerPadding,
+              right: leftAligned ? containerPadding : 0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.horizontal(
+                    left: leftAligned
+                        ? Radius.circular(0)
+                        : Radius.circular(containerBorderRadius),
+                    right: leftAligned
+                        ? Radius.circular(containerBorderRadius)
+                        : Radius.circular(0),
+                  ),
+                  child: Image.network(imgUrl, fit: BoxFit.fill),
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                    left: leftAligned ? 20 : 0, right: leftAligned ? 0 : 20),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -67,13 +152,31 @@ Widget categories() {
       children: <Widget>[
         CategoryListItem(
           categoryIcon: Icons.bug_report,
-          categoryName: 'Burgers',
+          categoryName: "Burgers",
           availability: 12,
           selected: true,
         ),
         CategoryListItem(
           categoryIcon: Icons.bug_report,
-          categoryName: 'Burgers',
+          categoryName: "Pizza",
+          availability: 12,
+          selected: false,
+        ),
+        CategoryListItem(
+          categoryIcon: Icons.bug_report,
+          categoryName: "Rolls",
+          availability: 12,
+          selected: false,
+        ),
+        CategoryListItem(
+          categoryIcon: Icons.bug_report,
+          categoryName: "Burgers",
+          availability: 12,
+          selected: false,
+        ),
+        CategoryListItem(
+          categoryIcon: Icons.bug_report,
+          categoryName: "Burgers",
           availability: 12,
           selected: false,
         ),
